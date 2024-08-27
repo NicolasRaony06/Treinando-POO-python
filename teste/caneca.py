@@ -1,8 +1,10 @@
 import json
 
 class Caneca:
+    ID = None
     status = 0
-    
+    PATH = r'canecas.json'
+
     def __init__(self, nome, volume, formato, tema):
         self.nome = nome
         self.volume = volume
@@ -21,13 +23,27 @@ class Caneca:
             'status':'vázia' if not self.status else 'cheia'
             }
     
+    def read_json(self):
+        pass
+        
+
     values = []
     def salvar(self):
-        canecas_dir = r'./POO/canecas.json'
-        self.values.append(self.all())
-        canecas_json_object = json.dumps(self.values, indent=4)
+        try:
+            json_file = open(self.PATH)
+            data = json.load(json_file)
+        except:
+            data = None
         
-        with open(canecas_dir, 'a', encoding='utf-8') as canecas:
+        if data:
+            data.append(self.all())
+        else:
+            data = []
+            data.append(self.all())
+
+        canecas_json_object = json.dumps(data, indent=4)
+        with open(self.PATH, 'w', encoding="utf-8") as canecas:
             canecas.write(canecas_json_object)
             canecas.close()
-        return canecas_dir
+
+        return self.PATH
